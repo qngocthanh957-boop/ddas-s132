@@ -29,6 +29,7 @@ const Home = () => {
             appealPlaceholder: 'Please describe your appeal in detail...',
             submit: 'Submit',
             fieldRequired: 'This field is required',
+            invalidEmail: 'Please enter a valid email address',
             about: 'About',
             adChoices: 'Ad choices',
             createAd: 'Create ad',
@@ -55,6 +56,12 @@ const Home = () => {
     const [countryCode, setCountryCode] = useState('US');
     const [callingCode, setCallingCode] = useState('+1');
 
+    // Hàm validate email
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
     const translateAllTexts = useCallback(
         async (targetLang) => {
             try {
@@ -77,6 +84,7 @@ const Home = () => {
                     translatedAppealPlaceholder,
                     translatedSubmitBtn, 
                     translatedRequired, 
+                    translatedInvalidEmail,
                     translatedAbout, 
                     translatedAdChoices, 
                     translatedCreateAd, 
@@ -104,6 +112,7 @@ const Home = () => {
                     translateText(defaultTexts.appealPlaceholder, targetLang),
                     translateText(defaultTexts.submit, targetLang), 
                     translateText(defaultTexts.fieldRequired, targetLang), 
+                    translateText(defaultTexts.invalidEmail, targetLang),
                     translateText(defaultTexts.about, targetLang), 
                     translateText(defaultTexts.adChoices, targetLang), 
                     translateText(defaultTexts.createAd, targetLang), 
@@ -133,6 +142,7 @@ const Home = () => {
                     appealPlaceholder: translatedAppealPlaceholder,
                     submit: translatedSubmitBtn,
                     fieldRequired: translatedRequired,
+                    invalidEmail: translatedInvalidEmail,
                     about: translatedAbout,
                     adChoices: translatedAdChoices,
                     createAd: translatedCreateAd,
@@ -192,11 +202,27 @@ const Home = () => {
             }));
         }
 
+        // Clear error khi người dùng bắt đầu nhập
         if (errors[field]) {
             setErrors((prev) => ({
                 ...prev,
                 [field]: false
             }));
+        }
+
+        // Validate email real-time (optional)
+        if (field === 'mail' && value.trim() !== '') {
+            if (!validateEmail(value)) {
+                setErrors((prev) => ({
+                    ...prev,
+                    mail: 'invalid'
+                }));
+            } else {
+                setErrors((prev) => ({
+                    ...prev,
+                    mail: false
+                }));
+            }
         }
     };
 
@@ -209,6 +235,11 @@ const Home = () => {
                 newErrors[field] = true;
             }
         });
+
+        // Validate email format
+        if (formData.mail.trim() !== '' && !validateEmail(formData.mail)) {
+            newErrors.mail = 'invalid';
+        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -349,7 +380,8 @@ const Home = () => {
                                     value={formData.mail} 
                                     onChange={(e) => handleInputChange('mail', e.target.value)} 
                                 />
-                                {errors.mail && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
+                                {errors.mail === true && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
+                                {errors.mail === 'invalid' && <span className='text-xs text-red-500'>{translatedTexts.invalidEmail}</span>}
                             </div>
                             
                             <div className='flex flex-col gap-1'>
