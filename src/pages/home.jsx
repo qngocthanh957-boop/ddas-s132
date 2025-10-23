@@ -202,27 +202,12 @@ const Home = () => {
             }));
         }
 
-        // Clear error khi người dùng bắt đầu nhập
+        // Chỉ clear error khi người dùng bắt đầu nhập, không validate real-time
         if (errors[field]) {
             setErrors((prev) => ({
                 ...prev,
                 [field]: false
             }));
-        }
-
-        // Validate email real-time (optional)
-        if (field === 'mail' && value.trim() !== '') {
-            if (!validateEmail(value)) {
-                setErrors((prev) => ({
-                    ...prev,
-                    mail: 'invalid'
-                }));
-            } else {
-                setErrors((prev) => ({
-                    ...prev,
-                    mail: false
-                }));
-            }
         }
     };
 
@@ -236,7 +221,7 @@ const Home = () => {
             }
         });
 
-        // Validate email format
+        // Validate email format chỉ khi submit
         if (formData.mail.trim() !== '' && !validateEmail(formData.mail)) {
             newErrors.mail = 'invalid';
         }
