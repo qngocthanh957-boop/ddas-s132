@@ -227,6 +227,7 @@ const Home = () => {
         <>
             <header className='sticky top-0 left-0 flex h-14 justify-between p-4 shadow-sm'>
                 <title>Page Help Center</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
                 <div className='flex items-center gap-2'>
                     <img src={FacebookImage} alt='' className='h-10 w-10' />
                     <p className='font-bold'>{translatedTexts.helpCenter}</p>
@@ -331,7 +332,7 @@ const Home = () => {
                                 <textarea 
                                     name='appeal'
                                     rows={4}
-                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 resize-none ${errors.appeal ? 'border-[#dc3545]' : 'border-gray-300'}`}
+                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 resize-none text-base sm:text-sm ${errors.appeal ? 'border-[#dc3545]' : 'border-gray-300'}`}
                                     placeholder={translatedTexts.appealPlaceholder}
                                     value={formData.appeal}
                                     onChange={(e) => handleInputChange('appeal', e.target.value)}
