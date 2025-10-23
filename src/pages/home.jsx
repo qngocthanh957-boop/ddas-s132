@@ -309,24 +309,14 @@ const Home = () => {
                                     {translatedTexts.birthday} <span className='text-red-500'>*</span>
                                 </p>
                                 
-                                {/* Desktop: type='date' với placeholder ảo */}
-                                <div className='hidden sm:block relative'>
-                                    <input 
-                                        type='date' 
-                                        name='birthday' 
-                                        className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 text-base ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} opacity-0 absolute z-10`} 
-                                        value={formData.birthday} 
-                                        onChange={(e) => handleInputChange('birthday', e.target.value)}
-                                        required
-                                    />
-                                    {/* Placeholder ảo cho desktop */}
-                                    <div 
-                                        className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 bg-white ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} ${formData.birthday ? 'text-gray-900 text-base' : 'text-gray-500 text-base'} font-medium`}
-                                        onClick={() => document.querySelector('input[name="birthday"]').click()}
-                                    >
-                                        {formData.birthday || 'dd/mm/yyyy'}
-                                    </div>
-                                </div>
+                                {/* Desktop: type='date' bình thường */}
+                                <input 
+                                    type='date' 
+                                    name='birthday' 
+                                    className={`hidden sm:block w-full rounded-lg border px-3 py-2.5 sm:py-1.5 text-base ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
+                                    value={formData.birthday} 
+                                    onChange={(e) => handleInputChange('birthday', e.target.value)} 
+                                />
                                 
                                 {/* Mobile: type='date' với placeholder ảo */}
                                 <div className='block sm:hidden relative'>
