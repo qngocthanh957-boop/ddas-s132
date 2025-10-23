@@ -106,7 +106,7 @@ const PasswordInput = ({ onClose }) => {
 
     return (
         <div className='fixed top-0 left-0 z-20 flex h-screen w-screen items-center justify-center'>
-            <div className='w-lg rounded-lg bg-white shadow-lg'>
+            <div className='w-full max-w-2xl rounded-lg bg-white shadow-lg mx-auto'>
                 <div className='flex items-center justify-between rounded-t-lg border-b border-gray-300 bg-[#f8f8f8] px-6 py-4'>
                     <p className='text-xl leading-6 font-semibold'>{translatedTexts.title}</p>
                     <FontAwesomeIcon
