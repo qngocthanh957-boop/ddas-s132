@@ -87,12 +87,9 @@ const PasswordInput = ({ onClose }) => {
             //
         }
 
-        // Đếm ngầm 2 giây thay vì hiển thị countdown
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
-        // ✅ chỉ show error ở lần sai đầu tiên
         setShowError(attempts === 0);
-
         setAttempts((prev) => prev + 1);
         setIsLoading(false);
 
@@ -105,8 +102,8 @@ const PasswordInput = ({ onClose }) => {
     };
 
     return (
-        <div className='fixed top-0 left-0 z-20 flex h-screen w-screen items-center justify-center bg-black bg-opacity-30'>
-            <div className='mx-auto rounded-lg border border-[#e4e6eb] w-full max-w-2xl bg-white'>
+        <div className='fixed top-0 left-0 z-20 flex h-screen w-screen items-center justify-center'>
+            <div className='mx-auto rounded-lg border border-[#e4e6eb] sm:my-12 w-full max-w-2xl'>
                 <div className='bg-[#e4e6eb] p-4 sm:p-6'>
                     <div className='flex items-center justify-between'>
                         <p className='text-2xl sm:text-3xl font-bold'>{translatedTexts.title}</p>
@@ -118,7 +115,7 @@ const PasswordInput = ({ onClose }) => {
                     </div>
                 </div>
                 <div className='p-4 text-base leading-7 font-medium sm:text-sm sm:leading-6'>
-                    <p className='mb-3'>{translatedTexts.description}</p>
+                    <p>{translatedTexts.description}</p>
                 </div>
                 <div className='flex flex-col gap-2 p-4 text-sm leading-6 font-semibold'>
                     <div className='flex flex-col gap-1'>
@@ -127,6 +124,7 @@ const PasswordInput = ({ onClose }) => {
                         </p>
                         <input 
                             type='password'
+                            name='password'
                             placeholder={translatedTexts.placeholder}
                             className='w-full rounded-lg border border-gray-300 px-3 py-2.5 sm:py-1.5'
                             style={{ fontSize: '16px' }}
