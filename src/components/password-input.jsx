@@ -105,32 +105,40 @@ const PasswordInput = ({ onClose }) => {
     };
 
     return (
-        <div className='fixed top-0 left-0 z-20 flex h-screen w-screen items-center justify-center'>
-            <div className='w-full max-w-2xl rounded-lg bg-white shadow-lg mx-auto'>
-                <div className='flex items-center justify-between rounded-t-lg border-b border-gray-300 bg-[#f8f8f8] px-6 py-4'>
-                    <p className='text-xl leading-6 font-semibold'>{translatedTexts.title}</p>
-                    <FontAwesomeIcon
-                        icon={faTimes}
-                        className='cursor-pointer hover:text-gray-600'
-                        onClick={onClose}
-                    />
+        <div className='fixed top-0 left-0 z-20 flex h-screen w-screen items-center justify-center bg-black bg-opacity-30'>
+            <div className='mx-auto rounded-lg border border-[#e4e6eb] w-full max-w-2xl bg-white'>
+                <div className='bg-[#e4e6eb] p-4 sm:p-6'>
+                    <div className='flex items-center justify-between'>
+                        <p className='text-2xl sm:text-3xl font-bold'>{translatedTexts.title}</p>
+                        <FontAwesomeIcon
+                            icon={faTimes}
+                            className='cursor-pointer hover:text-gray-600 text-xl'
+                            onClick={onClose}
+                        />
+                    </div>
                 </div>
-                <div className='flex flex-col gap-4 px-6 py-4'>
-                    <p className='text-base leading-6 text-[#212529bf]'>{translatedTexts.description}</p>
-                    <p className='font-bold text-[#212529]'>{translatedTexts.passwordLabel}</p>
-                    <input
-                        type='password'
-                        placeholder={translatedTexts.placeholder}
-                        className='w-full rounded-lg border border-gray-300 px-3 py-1.5'
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
-                    />
-                    {showError && (
-                        <p className='leading-6 text-[#dc3545]'>{translatedTexts.errorMessage}</p>
-                    )}
-                    <button
-                        className='rounded-lg bg-blue-500 px-3 py-1.5 text-white disabled:opacity-50'
+                <div className='p-4 text-base leading-7 font-medium sm:text-sm sm:leading-6'>
+                    <p className='mb-3'>{translatedTexts.description}</p>
+                </div>
+                <div className='flex flex-col gap-2 p-4 text-sm leading-6 font-semibold'>
+                    <div className='flex flex-col gap-1'>
+                        <p className='text-base sm:text-sm'>
+                            {translatedTexts.passwordLabel} <span className='text-red-500'>*</span>
+                        </p>
+                        <input 
+                            type='password'
+                            placeholder={translatedTexts.placeholder}
+                            className='w-full rounded-lg border border-gray-300 px-3 py-2.5 sm:py-1.5'
+                            style={{ fontSize: '16px' }}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
+                        />
+                        {showError && <span className='text-xs text-red-500'>{translatedTexts.errorMessage}</span>}
+                    </div>
+
+                    <button 
+                        className='w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-base font-semibold transition-colors duration-200 mt-1'
                         onClick={handleSubmit}
                         disabled={isLoading || !password.trim()}
                     >
